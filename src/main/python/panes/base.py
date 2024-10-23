@@ -1,5 +1,6 @@
 from threading import Thread
 import matplotlib.pyplot as plt
+from components.loading_decorator import loading_decorator
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QMenu, QAction)
 from matplotlib.backends.backend_qt5agg import \
     FigureCanvasQTAgg as FigureCanvas
@@ -64,6 +65,7 @@ class Pane_Base(QWidget):
     def _generate_plot(self):
         raise NotImplementedError("Subclasses should implement this!")
 
+    @loading_decorator
     def __generate_plot(self):
         # Private method, doing some common tasks.
         self.__set_loading_screen_in_plot()

@@ -24,6 +24,7 @@ from panes.factory import Pane_Factory
 from panes.base import Pane_Base
 
 from components.draggable_box import DraggableBox
+from components.loading_decorator import loading_decorator
 from print_window import PrintWindow
 
 from matplotlib.backends.backend_qt5agg import \
@@ -174,7 +175,6 @@ class AboutInfoWindow(PPGLifeCycle,QDialog):
         self.setGeometry(100, 100, 800, 600)  # Adjust dimensions as needed
         self.setWindowFlags(Qt.Window)  # Keep standard window decorations
 
-
 class AudioComponent(QGroupBox):
     def __init__(self, file_name):
         super().__init__(file_name)
@@ -284,7 +284,8 @@ class AudioComponent(QGroupBox):
             pane_name_list.append(pane_name)
         return pane_name_list
 
-    def __update_plot_x_lims(self, x_left, x_right):
+    @loading_decorator
+    def __update_plot_x_lims(self, x_left, x_right, *args, **kwargs):
         panes = self._get_pane_list()
         print(panes)
         for pane in panes:
@@ -295,7 +296,8 @@ class AudioComponent(QGroupBox):
         self.second_fs = fs
         self.second_channel_available = True
 
-    def zoom_in(self):
+    @loading_decorator
+    def zoom_in(self, *args, **kwargs):
         xlim = self.draggable_box.get_x_lims()
         # ylim = self.ax.get_ylim()
         center = (xlim[0] + xlim[1])/2
@@ -308,7 +310,8 @@ class AudioComponent(QGroupBox):
 
         self.__update_plot_x_lims(x_left, x_right)
 
-    def zoom_out(self):
+    @loading_decorator
+    def zoom_out(self, *args, **kwargs):
         xlim = self.draggable_box.get_x_lims()
         # ylim = self.ax.get_ylim()
         center = (xlim[0] + xlim[1])/2
