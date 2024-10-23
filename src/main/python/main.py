@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import matplotlib.axes as mtAxes
 import numpy as np
 import soundfile as sf
+import sounddevice as sd
 import pickle
 from dependencies.constantQ.main import constantq
 from dependencies.formant_CGDZP.main import formant_CGDZP
@@ -24,6 +25,7 @@ from panes.factory import Pane_Factory
 from panes.base import Pane_Base
 
 from components.draggable_box import DraggableBox
+from components.player_line import PlayerLine
 from print_window import PrintWindow
 
 from matplotlib.backends.backend_qt5agg import \
@@ -227,8 +229,13 @@ class AudioComponent(QGroupBox):
         self.zoom_out_action.triggered.connect(self.zoom_out)
         self.tool_button_zoom_out = QToolButton(self)
         self.tool_button_zoom_out.setDefaultAction(self.zoom_out_action)
+        self.play_action = QAction('Play/Pause')
+        self.play_action.triggered.connect(self.__play_file)
+        self.tool_button_play = QToolButton(self)
+        self.tool_button_play.setDefaultAction(self.play_action)
         self.action_button_layout_waveform.addWidget(self.tool_button_zoom_in)
         self.action_button_layout_waveform.addWidget(self.tool_button_zoom_out)
+        self.action_button_layout_waveform.addWidget(self.tool_button_play)
         self.action_button_layout_waveform.addStretch()
         
         self.layout_area.addLayout(self.action_button_layout_waveform)
@@ -324,6 +331,17 @@ class AudioComponent(QGroupBox):
 
         self.__update_plot_x_lims(x_left, x_right)
 
+    def __play_file(self):
+        x_left, x_right = self.draggable_box.get_x_lims()
+
+        x_left = int((x_left/self._time) * len(self.data))
+        x_right = int((x_right/self._time) * len(self.data))
+
+        to_be_played = self.data[x_left:x_right]
+
+        sd.play(to_be_played, self.fs)
+        sd.wait()
+        
     def get_active_radio_button(self):
         radioButtons = [
             self.radioButton2,
