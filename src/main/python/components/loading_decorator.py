@@ -14,13 +14,9 @@ def loading_decorator(func):
     def wrapper(*args, **kwargs):
         # Get the main window or relevant widget
         app = QApplication.instance()
-        window = app.activeWindow()  # Assuming the main window is active
 
         # Set loading cursor
         app.setOverrideCursor(Qt.WaitCursor)
-
-        # Disable the main window to block interactions
-        window.setEnabled(False)
 
         try:
             # Execute the blocking function
@@ -28,7 +24,6 @@ def loading_decorator(func):
         finally:
             # Restore normal cursor and re-enable the window
             app.restoreOverrideCursor()
-            window.setEnabled(True)
 
         return result
     return wrapper

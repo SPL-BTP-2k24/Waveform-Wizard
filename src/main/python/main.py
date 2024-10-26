@@ -243,7 +243,8 @@ class AudioComponent(QGroupBox):
         self.ax_waveform.plot(x, self.data)
         self.canvas_waveform.draw()
 
-    def set_data(self, data, fs):
+    @loading_decorator
+    def set_data(self, data, fs, *args, **kwargs):
         self.data = data
         self.fs = fs
 
@@ -263,7 +264,8 @@ class AudioComponent(QGroupBox):
         # pane.update_graph_x_lims(x_left, x_right)
         self.layout_area.addWidget(pane)
 
-    def __delete_pane(self, widget_object: QWidget):
+    @loading_decorator
+    def __delete_pane(self, widget_object: QWidget, *args, **kwargs):
         self.layout_area.removeWidget(widget_object)
         self.layout_area.update()
         widget_object.deleteLater()
@@ -473,8 +475,9 @@ class MainWindow(PPGLifeCycle,QMainWindow):
         new_window_action = QAction('New Window', self)
         new_window_action.triggered.connect(self.open_new_window)
         file_menu.addAction(new_window_action)
-        
-    def open_new_window(self):
+    
+    @loading_decorator
+    def open_new_window(self, *args, **kwargs):
         """Create and show a new instance of MainWindow."""
         self.new_window = MainWindow(args=[])  # You can pass arguments if needed
         self.new_window.show()
@@ -529,7 +532,8 @@ class MainWindow(PPGLifeCycle,QMainWindow):
         alignment_action.triggered.connect(lambda: self.change_pane(text))
         return alignment_action
 
-    def __invoke_export(self):
+    @loading_decorator
+    def __invoke_export(self, *args, **kwargs):
         # TODO: Rewrite
         audio_component_list = self.__get_audio_components()
         
@@ -555,7 +559,8 @@ class MainWindow(PPGLifeCycle,QMainWindow):
             pane_name_list = audio_component_list[0].get_pane_name_list()
             return pane_name_list
 
-    def __load_file_from_file_name(self, file_name):
+    @loading_decorator
+    def __load_file_from_file_name(self, file_name, *args, **kwargs):
         if(get_file_extension(file_name) not in ['wav', 'wwc']):
             show_error_message('File Format unsupported')
             return
@@ -587,7 +592,9 @@ class MainWindow(PPGLifeCycle,QMainWindow):
         cwd = os.getcwd()
         resolved_path = os.path.abspath(os.path.join(cwd, arg_1))
         self.__load_file_from_file_name(resolved_path)
-    def __save_file(self, file_path):
+    
+    @loading_decorator
+    def __save_file(self, file_path, *args, **kwargs):
         audio_component_list = self.__get_audio_components()
         if len(audio_component_list) == 0:
             show_error_message('No file loaded')
@@ -620,7 +627,8 @@ class MainWindow(PPGLifeCycle,QMainWindow):
         with open(file_path, 'wb') as f:
             pickle.dump(all_configs, f)
     
-    def __load_file(self, file_path):
+    @loading_decorator
+    def __load_file(self, file_path, *args, **kwargs):
         with open(file_path, 'rb') as file:
             config = pickle.load(file)
         # console.log(config)
