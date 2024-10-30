@@ -176,7 +176,7 @@ class AboutInfoWindow(PPGLifeCycle,QDialog):
         self.setWindowFlags(Qt.Window)  # Keep standard window decorations
 
 class AudioComponent(QGroupBox):
-    def __init__(self, file_name):
+    def __init__(self, file_name, delete_pane_callback):
         super().__init__(file_name)
         self.initUI()
         self.file_name = file_name
@@ -189,6 +189,8 @@ class AudioComponent(QGroupBox):
         self.second_data = None
         self.second_fs = None
         self.second_channel_available = False
+
+        self.delete_pane_callback = delete_pane_callback
 
     def initUI(self):
         self.layout_area = QVBoxLayout()
@@ -260,12 +262,20 @@ class AudioComponent(QGroupBox):
     def _add_pane(self, pane_name):
         pane_class = Pane_Factory.get_pane_class_by_name(pane_name)
         x_left, x_right = self.draggable_box.get_x_lims()
-        pane = pane_class(self.data, self.fs, self.resampled_data, self.resampled_fs, self.__delete_pane, x_left, x_right)
+        pane = pane_class(self.data, self.fs, self.resampled_data, self.resampled_fs, self._delete_pane_callback_own, x_left, x_right)
         # pane.update_graph_x_lims(x_left, x_right)
         self.layout_area.addWidget(pane)
 
-    @loading_decorator
-    def __delete_pane(self, widget_object: QWidget, *args, **kwargs):
+    def _delete_pane_callback_own(self, widget_object: QWidget):
+        pane_list = self._get_pane_list()
+        target_index = pane_list.index(widget_object)
+        self.delete_pane_callback(target_index)
+
+    def _delete_pane(self, pane_index: int, *args, **kwargs):
+        pane_list = self._get_pane_list()
+        
+        widget_object = pane_list[pane_index]
+
         self.layout_area.removeWidget(widget_object)
         self.layout_area.update()
         widget_object.deleteLater()
@@ -519,6 +529,15 @@ class MainWindow(PPGLifeCycle,QMainWindow):
         for audio_component in audio_component_list:
             audio_component._add_pane(pane_name)
 
+    @loading_decorator
+    def __delete_pane(self, pane_index):
+        # print('Entering here')
+        audio_component_list = self.__get_audio_components()
+        # print(audio_component_list)
+
+        for audio_component in audio_component_list:
+            audio_component._delete_pane(pane_index)
+
     def createMoreMenu(self):
         file_menu = self.menuBar().addMenu('More')
 
@@ -549,7 +568,7 @@ class MainWindow(PPGLifeCycle,QMainWindow):
         self.__print_window = PrintWindow(axes_grid)
         self.__print_window.show()
 
-        # self.left_component.export()
+        # self.left_component.export()__delete_pane
 
     def __get_existing_pane_list(self) -> List[str]:
         audio_component_list = self.__get_audio_components()
@@ -577,7 +596,7 @@ class MainWindow(PPGLifeCycle,QMainWindow):
 
             first_data = process_audio(data)
             
-            new_audio_component = AudioComponent(file_base_name)
+            new_audio_component = AudioComponent(file_base_name, self.__delete_pane)
             new_audio_component.set_data(first_data, samplerate)
             self.audio_layouts.addWidget(new_audio_component)
             
@@ -633,7 +652,7 @@ class MainWindow(PPGLifeCycle,QMainWindow):
             config = pickle.load(file)
         # console.log(config)
         for audio_component in config:
-            new_audio_component = AudioComponent(audio_component['file_name'])
+            new_audio_component = AudioComponent(audio_component['file_name'], self.__delete_pane)
             new_audio_component.set_data(audio_component['data'], audio_component['fs'])
             new_audio_component.x_left = audio_component['plot_config']['x_start']
             new_audio_component.x_right = audio_component['plot_config']['x_end']
