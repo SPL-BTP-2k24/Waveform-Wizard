@@ -637,6 +637,7 @@ class MainWindow(PPGLifeCycle,QMainWindow):
             new_audio_component.set_data(audio_component['data'], audio_component['fs'])
             new_audio_component.x_left = audio_component['plot_config']['x_start']
             new_audio_component.x_right = audio_component['plot_config']['x_end']
+            new_audio_component.draggable_box.set_x_lims(new_audio_component.x_left, new_audio_component.x_right)
             new_audio_component.ax_waveform.set_ylim(audio_component['plot_config']['y_start'], audio_component['plot_config']['y_end'])
             for pane in audio_component['other_plot_config']['panes']:
                 new_audio_component._add_pane(pane)
