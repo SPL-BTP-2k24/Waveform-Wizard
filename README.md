@@ -80,6 +80,10 @@ $ sudo apt install ./Waveform-Wizard_ubuntu-<version>.deb
 ## Ubuntu
 1. You can find the application in app tray in ubuntu
 
+# Supported Formats
+
+Visit [here](https://github.com/SPL-BTP-2k24/Samples) to find the supported formats.
+
 # Contributors
 
 - [Abhinav Reddy Boddu](https://github.com/Abhinavreddy-B)
