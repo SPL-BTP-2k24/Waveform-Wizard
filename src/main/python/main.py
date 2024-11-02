@@ -66,7 +66,7 @@ class AboutInfoWindow(PPGLifeCycle,QDialog):
         layout.addSpacing(15)  # Add spacing before logos
         
         # Logos
-        logo_path = self.get_resource('images/logo.png')  # Adjust the path based on where you placed the image
+        logo_path = self.get_resource('images/logo2.png')  # Adjust the path based on where you placed the image
         logo1 = QLabel()
 
         pixmap1 = QPixmap(logo_path)  # Update with actual path
@@ -78,8 +78,7 @@ class AboutInfoWindow(PPGLifeCycle,QDialog):
         
         # SPCRC description
         description_label = QLabel(
-            "Signal Processing and Communication Research Center (SPCRC) is one of the highly active research centers at IIIT-H focusing on the various areas of communications and signal processing. "
-            "The center provides an umbrella environment for faculty, undergraduate, and postgraduate students to carry out research in various aspects related to the respective fields."
+            "The Speech Processing Lab at IIIT-H is dedicated to conducting goal-oriented foundational research, addressing core challenges in developing robust speech-to-text systems, natural-sounding text-to-speech solutions, spoken and audio information retrieval, and biometric systems utilizing speech and video."
         )
         description_label.setWordWrap(True)
         description_label.setAlignment(Qt.AlignLeft)
@@ -95,7 +94,7 @@ class AboutInfoWindow(PPGLifeCycle,QDialog):
         layout.addWidget(contact_header)
 
         # Contact information as link
-        contact_link = QLabel('<a href="http://spcrc.iiit.ac.in">http://spcrc.iiit.ac.in</a>')
+        contact_link = QLabel('<a href="https://speech.iiit.ac.in">https://speech.iiit.ac.in/</a>')
         contact_link.setOpenExternalLinks(True)  # Make the link clickable
         contact_link.setAlignment(Qt.AlignLeft)
         layout.addWidget(contact_link)
@@ -104,7 +103,7 @@ class AboutInfoWindow(PPGLifeCycle,QDialog):
 
         # Other contact details formatted as an address
         contact_info = QLabel(
-            "Signal Processing and Communication Research Centre (SPCRC)<br>"
+            "Speech Processing Lab, LTRC<br>"
             "IIIT Hyderabad<br>"
             "Gachibowli<br>"
             "Hyderabad, India - 500032"
@@ -121,7 +120,7 @@ class AboutInfoWindow(PPGLifeCycle,QDialog):
 
 
         # Footer (trademark/ownership mark)
-        trademark_label = QLabel("© Signal Processing and Communication Research Center (SPCRC). All rights reserved.")
+        trademark_label = QLabel("© Signal Processing Lab, LTRC, IIIT-Hyderabad. All rights reserved.")
         trademark_label.setAlignment(Qt.AlignCenter)
         layout.addWidget(trademark_label)
 
