@@ -29,34 +29,6 @@ def copy_axes(old_ax, new_ax):
                 linewidths=collection.get_linewidths()
             )
             new_ax.add_collection(new_collection)
-        
-        # elif isinstance(collection, mcollections.PathCollection):
-        #     new_collection = mcollections.PathCollection(
-        #         paths=collection.get_paths(),
-        #         sizes=collection.get_sizes(),
-        #         facecolor=collection.get_facecolor(),  # Get point colors
-        #         edgecolor=collection.get_edgecolor(),  # Get edge colors if needed
-        #         marker=collection.get_marker(),
-        #     )
-        #     new_ax.add_collection(new_collection)
-        # print(collection)
-        # if isinstance(collection, mcollections.PathCollection):
-        #     new_collection = mcollections.PathCollection(
-        #         collection.get_paths(),
-        #         facecolor=collection.get_facecolor(),
-        #         edgecolor=collection.get_edgecolor(),
-        #         linewidths=collection.get_linewidths()
-        #     )
-        #     new_ax.add_collection(new_collection)
-
-        # elif isinstance(collection, mcollections.QuadMesh):
-        #     new_collection = mcollections.QuadMesh(
-        #         collection.get_array(),
-        #         facecolor=collection.get_facecolor(),
-        #         edgecolor=collection.get_edgecolor(),
-        #         linewidths=collection.get_linewidths()
-        #     )
-        #     new_ax.add_collection(new_collection)
 
     # Copy patches (e.g., rectangles, circles, polygons)
     for patch in old_ax.patches:
