@@ -26,13 +26,13 @@ from matplotlib.backends.backend_qt5agg import \
     FigureCanvasQTAgg as FigureCanvas
 from ppg_runtime.application_context.PyQt5 import (ApplicationContext,
                                                    PPGLifeCycle)
-from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import Qt, QTimer, QSize
+from PyQt5.QtGui import QPixmap,QIcon
 from PyQt5.QtWidgets import (QAction, QFileDialog,
                              QGroupBox, QHBoxLayout, QLabel, QMainWindow,
                              QMessageBox,
                              QToolButton, QVBoxLayout, QWidget,
-                             QDialog)
+                             QDialog,QToolBar,)
 
 from version import meta_info
 
@@ -290,6 +290,8 @@ class MainWindow(PPGLifeCycle,QMainWindow):
         self.createFileMenu()
         self.createPaneMenu()
         self.createMoreMenu()
+        self.createToolbar()
+
 
         central_widget = QWidget(self)
         self.main_layout = QVBoxLayout(central_widget)
@@ -320,6 +322,76 @@ class MainWindow(PPGLifeCycle,QMainWindow):
         self.setGeometry(100, 100, 800, 600)
         self.setWindowTitle('Waveform-Wizard')
         self.showMaximized()
+        
+    def createToolbar(self):
+        # Create toolbar
+        toolbar = QToolBar("Main Toolbar")
+        self.addToolBar(toolbar)
+        
+        toolbar.setIconSize(QSize(24, 24))  # Adjust the size as needed
+
+
+        # New Window button
+        new_window_action = QAction(QIcon(self.get_resource('images/Newwindow.png')), "New Window", self)
+        new_window_action.triggered.connect(self.open_new_window)
+        toolbar.addAction(new_window_action)
+        
+        # Add spacer
+        spacer = QWidget()
+        spacer.setFixedWidth(10)  # Adjust the width of the space as needed
+        toolbar.addWidget(spacer)
+        
+        # Load File button
+        load_action = QAction(QIcon(self.get_resource('images/loadfile.png')), "Load File", self)
+        load_action.triggered.connect(self.__invoke_file_picker)
+        toolbar.addAction(load_action)
+
+        # Add spacer
+        spacer = QWidget()
+        spacer.setFixedWidth(10)  # Adjust the width of the space as needed
+        toolbar.addWidget(spacer)
+        
+        # Save File button
+        save_action = QAction(QIcon(self.get_resource('images/save.png')), "Save File", self)
+        save_action.triggered.connect(self.__save_file)
+        toolbar.addAction(save_action)
+
+        # Add spacer
+        spacer = QWidget()
+        spacer.setFixedWidth(10)  # Adjust the width of the space as needed
+        toolbar.addWidget(spacer)
+
+        # Export button
+        export_action = QAction(QIcon(self.get_resource('images/export.png')), "Export", self)
+        export_action.triggered.connect(self.__invoke_export)
+        toolbar.addAction(export_action)
+        
+        graph_pane_names = [
+            'Waveform', 'Spectrogram', 'ZTWS', 'Gammatonegram', 
+            'SFF', 'Formant Peaks', 'VAD', 'Pitch Contour', 
+            'Constant-Q'
+        ]
+    
+        # Loop through plot types and add actions with icons
+        for pane_name in graph_pane_names:
+
+            # Add spacer
+            spacer = QWidget()
+            spacer.setFixedWidth(10)  # Adjust the width of the space as needed
+            toolbar.addWidget(spacer)
+            
+            icon_path = self.get_resource(f"images/{pane_name.lower()}.png")
+            plot_icon = QIcon(icon_path)
+            plot_action = QAction(plot_icon, pane_name, self)
+            
+            # Connect the action to the corresponding pane adding function
+            plot_action.triggered.connect(lambda checked, p=pane_name: self.__add_pane(p))
+            
+            # Add action to the toolbar
+            toolbar.addAction(plot_action)
+
+        
+
 
     def createFileMenu(self):
         file_menu = self.menuBar().addMenu('File')
