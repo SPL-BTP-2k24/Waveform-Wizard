@@ -10,15 +10,8 @@ import matplotlib.axes as mtAxes
 import numpy as np
 import soundfile as sf
 import pickle
-from dependencies.constantQ.main import constantq
-from dependencies.formant_CGDZP.main import formant_CGDZP
-from dependencies.gammatonegram.main import gammatonegram
-from dependencies.pitch_srh.main import pitch_srh
+
 from dependencies.resample.main import resample
-from dependencies.SINGLE_FREQ_FILTER_FS.main import \
-    SINGLE_FREQ_FILTER_FS as single_freq_filter_fs
-from dependencies.voiced_unvoiced_own.main import voiced_unvoiced_own
-from dependencies.ZERO_TIME_WIND_SPECTRUM.main import zero_time_wind_spectrum
 
 from panes.factory import Pane_Factory
 from panes.base import Pane_Base
@@ -29,19 +22,15 @@ from print_window import PrintWindow
 
 from matplotlib.backends.backend_qt5agg import \
     FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt5agg import \
-    NavigationToolbar2QT as NavigationToolbar
-from ppg_runtime.application_context import PPGStore
 from ppg_runtime.application_context.PyQt5 import (ApplicationContext,
                                                    PPGLifeCycle)
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import (QAction, QActionGroup, QApplication, QFileDialog,
+from PyQt5.QtWidgets import (QAction, QFileDialog,
                              QGroupBox, QHBoxLayout, QLabel, QMainWindow,
-                             QMenu, QMessageBox, QRadioButton, QSplitter,
-                             QTextEdit, QToolButton, QVBoxLayout, QWidget,
-                             QLineEdit, QDialog, QPushButton)
-from scipy.signal import spectrogram
+                             QMessageBox,
+                             QToolButton, QVBoxLayout, QWidget,
+                             QDialog)
 
 from version import meta_info
 
@@ -299,7 +288,6 @@ class AudioComponent(QGroupBox):
     @loading_decorator
     def __update_plot_x_lims(self, x_left, x_right, *args, **kwargs):
         panes = self._get_pane_list()
-        print(panes)
         for pane in panes:
             pane.update_graph_x_lims(x_left, x_right)
 
