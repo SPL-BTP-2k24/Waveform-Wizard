@@ -51,7 +51,7 @@ class AboutInfoWindow(PPGLifeCycle,QDialog):
         layout.addWidget(version_label)
 
         # GitHub repository link
-        repo_label = QLabel('<a href="https://github.com/Abhinavreddy-B/Waveform-Wizard-2">GitHub Repository</a>')
+        repo_label = QLabel('<a href="https://github.com/SPL-BTP-2k24/Waveform-Wizard">GitHub Repository</a>')
         repo_label.setOpenExternalLinks(True)
         repo_label.setAlignment(Qt.AlignLeft)
         layout.addWidget(repo_label)
