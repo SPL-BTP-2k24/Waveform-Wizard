@@ -1,4 +1,7 @@
 import os
+import string
+
+from rom import rom_generate
 
 import matplotlib.lines as mlines
 import matplotlib.collections as mcollections
@@ -105,3 +108,13 @@ def process_audio(audio):
     else:
         # Invalid audio format
         raise ValueError("Invalid audio format")
+    
+def generate_auto_labels(type, n):
+    labels = None
+    if type == '(a)':
+        labels = [f"({letter})" for letter in string.ascii_lowercase]
+    elif type == '(1)':
+        labels = [f"({num})" for num in range(1, n+1)]
+    elif type == '(i)':
+        labels = [f"({rom_generate(i).lower()})" for i in range(1, n+1)]
+    return labels

@@ -6,28 +6,80 @@ from matplotlib.backends.backend_qt5agg import \
 
 from PyQt5.QtWidgets import (QGroupBox, QHBoxLayout,  QVBoxLayout, QWidget,
                              QLineEdit, QPushButton, QGridLayout, QComboBox,
-                             QFileDialog, QMessageBox, QLabel)
+                             QFileDialog, QCheckBox, QLabel)
 import numpy as np
 
 import utils
 from components.loading_decorator import loading_decorator
 
-class Column_Titles(QWidget):
+class Main_Title(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        self.__layout = QVBoxLayout()
+
+        self.__suptitle = QLineEdit(self)
+        self.__suptitle.setPlaceholderText('Title...')
+        self.__layout.addWidget(self.__suptitle)
+        
+        # Row labeling dropdown with label on the left
+        row_layout = QHBoxLayout()
+        row_label = QLabel("Row Label:")
+        self.__row_labelling_dropdown = QComboBox()
+        self.__row_labelling_dropdown.addItems(["Custom", "(a)", "(1)", "(i)"])
+        row_layout.addWidget(row_label)
+        row_layout.addWidget(self.__row_labelling_dropdown)
+        self.__layout.addLayout(row_layout)
+
+        # Column labeling dropdown with label on the left
+        col_layout = QHBoxLayout()
+        col_label = QLabel("Column Label:")
+        self.__col_labelling_dropdown = QComboBox()
+        self.__col_labelling_dropdown.addItems(["Custom", "(a)", "(1)", "(i)"])
+        col_layout.addWidget(col_label)
+        col_layout.addWidget(self.__col_labelling_dropdown)
+        self.__layout.addLayout(col_layout)
+
+        self.setLayout(self.__layout)
+
+    def get_value(self):
+        return {
+            "suptitle": self.__suptitle.text(),
+            "row_labelling": self.__row_labelling_dropdown.currentText(),
+            "col_labelling": self.__col_labelling_dropdown.currentText()
+        }
+
+class Column_Titles(QGroupBox):
     def __init__(self, index):
         super().__init__()
         self.__index = index
         self.initUI()
-    
+
     def initUI(self):
-        self.__col_title = QLineEdit(self)
-        self.__col_title.setPlaceholderText(f'Col {self.__index} Title')
+        self.__col_top_title = QLineEdit(self)
+        self.__col_top_title.setPlaceholderText(f'Col {self.__index} Top Title')
         
+        self.__col_bottom_title = QLineEdit(self)
+        self.__col_bottom_title.setPlaceholderText(f'Col {self.__index} Bottom Title')
+
+        self.__common_axes = QCheckBox('Use Common Axes')
+
         self.__layout = QVBoxLayout()
-        self.__layout.addWidget(self.__col_title)
+        self.__layout.addWidget(self.__col_top_title)
+        self.__layout.addWidget(self.__col_bottom_title)
+        self.__layout.addWidget(self.__common_axes)
+
         self.setLayout(self.__layout)
+
     
     def get_value(self):
-        return self.__col_title.text()
+        return {
+            "top_title": self.__col_top_title.text(), 
+            "bottom_title": self.__col_bottom_title.text(),
+            "common_axes": self.__common_axes.isChecked()
+        }
 
 class Row_Titles(QGroupBox):
     def __init__(self, index):
@@ -44,13 +96,20 @@ class Row_Titles(QGroupBox):
         self.__row_title_right = QLineEdit(self)
         self.__row_title_right.setPlaceholderText(f'Row {self.__index} Title (Right)')
         
+        self.__common_axes = QCheckBox('Use Common Axes')
+
         self.__layout = QVBoxLayout()
         self.__layout.addWidget(self.__row_title_left)
         self.__layout.addWidget(self.__row_title_right)
+        self.__layout.addWidget(self.__common_axes)
         self.setLayout(self.__layout)
     
     def get_value(self):
-        return self.__row_title_left.text(), self.__row_title_right.text()
+        return {
+            "left_title": self.__row_title_left.text(),
+            "right_title": self.__row_title_right.text(),
+            "common_axes": self.__common_axes.isChecked(),
+        }
 
 class ExportPopup(QWidget):
     def __init__(self, fig):
@@ -128,6 +187,9 @@ class PrintWindow(QWidget):
         self.showMaximized()
 
         self.__original_axes = np.array(axes, dtype=object)
+        for axes in self.__original_axes.flatten():
+            axes.set_xlabel('')
+            axes.set_ylabel('')
         self.__n_rows, self.__n_cols = self.__original_axes.shape
         
         self.__figure, self.__axes = plt.subplots(self.__n_rows, self.__n_cols, squeeze=False)
@@ -147,10 +209,9 @@ class PrintWindow(QWidget):
         self.__preview_layout = QVBoxLayout()
         self.__preview_layout.addWidget(self.__canvas)
         self.__preview_box.setLayout(self.__preview_layout)
-    
-        self.__suptitle = QLineEdit(self)
-        self.__suptitle.setPlaceholderText('Title...')
-        self.__main_title_input_layout.addWidget(self.__suptitle)
+
+        self.__main_title = Main_Title()
+        self.__main_title_input_layout.addWidget(self.__main_title)
 
         self.__col_title_list = []
         for index in range(self.__n_cols):
@@ -192,7 +253,7 @@ class PrintWindow(QWidget):
         self.setLayout(layout)
 
     def __update(self):
-        suptitle = self.__suptitle.text()
+        main_title_config = self.__main_title.get_value()
         
         col_titles_text = []
         for col_title in self.__col_title_list:
@@ -201,25 +262,57 @@ class PrintWindow(QWidget):
         
         row_titles_text = []
         for row_title in self.__row_title_list:
-            text_left, text_right = row_title.get_value()
-            row_titles_text.append([text_left, text_right])
+            config = row_title.get_value()
+            row_titles_text.append(config)
 
         @loading_decorator
         def __update_in_background():
-            self.__figure.suptitle(suptitle)
+            self.__figure.suptitle(main_title_config["suptitle"])
 
-            # column title
-            for title, axes in zip(col_titles_text, self.__axes[0]):
-                axes.set_title(title)
+            # column top title
+            for config, axes in zip(col_titles_text, self.__axes[0]):
+                axes.set_title(config['top_title'])
+
+            col_autolabel = main_title_config["col_labelling"]
+            if col_autolabel != 'Custom':
+                labels = utils.generate_auto_labels(col_autolabel, self.__n_cols)
+                for generated_label, config in zip(labels, col_titles_text):
+                    config['bottom_title'] = generated_label
+
+            # column bottom title
+            for config, axes in zip(col_titles_text, self.__axes[-1]):
+                axes.set_xlabel(config['bottom_title'], y=-0.01)
+
+            # column common axes
+            for config, axes_list in zip(col_titles_text, self.__axes[:-1, :].T):
+                for axes in axes_list:
+                    if config['common_axes']:
+                        axes.tick_params(axis='x', labelbottom=False)
+                    else:
+                        axes.tick_params(axis='x', labelbottom=True)
 
             # Row left title
-            for title, axes in zip(row_titles_text, self.__axes[:, 0]):
-                axes.set_ylabel(title[0])
+            for config, axes in zip(row_titles_text, self.__axes[:, 0]):
+                axes.set_ylabel(config["left_title"])
             
+            row_autolabel = main_title_config["row_labelling"]
+            if row_autolabel != 'Custom':
+                labels = utils.generate_auto_labels(row_autolabel, self.__n_rows)
+                for generated_label, config in zip(labels, row_titles_text):
+                    config['right_title'] = generated_label
+
             # Row right title
-            for title, axes in zip(row_titles_text, self.__axes[:, -1]):
+            for config, axes in zip(row_titles_text, self.__axes[:, -1]):
                 axes.yaxis.set_label_position("right")
-                axes.set_ylabel(title[1])
+                axes.set_ylabel(config["right_title"])
+
+            # Row common axes
+            for config, axes in zip(row_titles_text, self.__axes[:, 1:]):
+                for axes in axes:
+                    if config['common_axes']:
+                        axes.tick_params(axis='y', labelleft=False)
+                    else:
+                        axes.tick_params(axis='y', labelleft=True)
 
             self.__canvas.draw()
         
