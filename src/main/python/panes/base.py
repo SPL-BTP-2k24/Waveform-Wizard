@@ -8,6 +8,7 @@ from matplotlib.backends.backend_qt5agg import \
 class Pane_Base(QWidget):
     def __init__(self, data, fs, resampled_data, resampled_fs, delete_callback, x_left, x_right):
         super().__init__()
+
         self._data = data
         self._fs = fs
         self._resampled_data = resampled_data
@@ -19,6 +20,9 @@ class Pane_Base(QWidget):
 
         self._pane_name = None # to be overwritten in child.
 
+        self.initUI()
+
+    def initUI(self):
         self.__plot = plt.figure(facecolor='none')
         self._ax = self.__plot.add_subplot(111, facecolor='none')
         self._ax.set_facecolor('None')
@@ -45,7 +49,6 @@ class Pane_Base(QWidget):
 
         context_menu.addAction(action1)
 
-        # Show the menu at the cursor's position
         context_menu.exec_(event.globalPos())
 
     def update_graph_x_lims(self, x_left, x_right):
@@ -67,14 +70,12 @@ class Pane_Base(QWidget):
 
     @loading_decorator
     def __generate_plot(self):
-        # Private method, doing some common tasks.
         self.__set_loading_screen_in_plot()
         self._generate_plot()
         self.update_graph_x_lims(x_left=self.__init_x_left, x_right=self.__init_x_right)
         self.__canvas.draw()
 
     def __delete_pane(self):
-        '''To be implemented'''
         self.__delete_callback(self)
         
     def get_pane_name(self):
