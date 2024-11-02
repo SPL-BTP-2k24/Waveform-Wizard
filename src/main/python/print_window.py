@@ -94,12 +94,7 @@ class ExportPopup(QWidget):
         
         self.__fig.savefig(file_name)
 
-        message = "File saved successfully"
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Icon.Information)
-        msg.setText(message)
-        msg.setWindowTitle("Succesful")
-        msg.exec_()
+        utils.show_message("File saved successfully", 'success')
 
         self.close()
 

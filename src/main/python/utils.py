@@ -1,6 +1,10 @@
+import os
+
 import matplotlib.lines as mlines
 import matplotlib.collections as mcollections
 import matplotlib.patches as mpatches
+
+from PyQt5.QtWidgets import (QMessageBox)
 
 def copy_axes(old_ax, new_ax):
     # Copy lines
@@ -66,3 +70,38 @@ def copy_axes(old_ax, new_ax):
 
 def flatten_2d(l):
     return [e for row in l for e in row]
+
+def show_message(message, msg_type='error'):
+    msg = QMessageBox()
+    
+    if msg_type == 'error':
+        msg.setIcon(QMessageBox.Critical)
+        msg.setWindowTitle("Error")
+    elif msg_type == 'success':
+        msg.setIcon(QMessageBox.Icon.Information)
+        msg.setWindowTitle("Success")
+    
+    msg.setText(message)
+    msg.exec_()
+
+def get_file_extension(file_name):
+    _, extension = os.path.splitext(file_name)
+    return extension[1:]
+
+def has_second_channel(audio):
+    if audio.ndim == 1:
+        return False
+    elif audio.ndim == 2 and audio.shape[1] == 2:
+        return True
+    
+def process_audio(audio):
+    if audio.ndim == 1:
+        # Type 1 audio (shape: (n,))
+        return audio
+    elif audio.ndim == 2 and audio.shape[1] == 2:
+        # Type 2 audio (shape: (n, 2))
+        # Take only the first channel
+        return audio[:, 0]
+    else:
+        # Invalid audio format
+        raise ValueError("Invalid audio format")
