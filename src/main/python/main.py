@@ -426,7 +426,7 @@ class MainWindow(PPGLifeCycle,QMainWindow):
         graph_pane_names = [
             'Waveform', 'Spectrogram', 'ZTWS', 'Gammatonegram', 
             'SFF', 'Formant Peaks', 'VAD', 'Pitch Contour', 
-            'Constant-Q', 'EGG'
+            'Constant-Q'
         ]
 
         for pane_name in graph_pane_names:
