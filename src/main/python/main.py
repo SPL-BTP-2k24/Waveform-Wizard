@@ -30,7 +30,7 @@ from PyQt5.QtCore import Qt, QTimer, QSize
 from PyQt5.QtGui import QPixmap,QIcon
 from PyQt5.QtWidgets import (QAction, QFileDialog,
                              QGroupBox, QHBoxLayout, QLabel, QMainWindow,
-                             QMessageBox,
+                             QMessageBox, QMenu,
                              QToolButton, QVBoxLayout, QWidget,
                              QDialog,QToolBar,)
 
@@ -133,7 +133,7 @@ class AboutInfoWindow(PPGLifeCycle,QDialog):
         self.setWindowFlags(Qt.Window)  # Keep standard window decorations
 
 class AudioComponent(QGroupBox):
-    def __init__(self, file_name, delete_pane_callback):
+    def __init__(self, file_name, delete_pane_callback, delete_file_callback):
         super().__init__(file_name)
         self.initUI()
         self.file_name = file_name
@@ -143,6 +143,7 @@ class AudioComponent(QGroupBox):
         self.resampled_fs = None
 
         self.delete_pane_parent_callback = delete_pane_callback
+        self.__delete_file_callback = delete_file_callback
 
     def initUI(self):
         self.layout_area = QVBoxLayout()
@@ -277,6 +278,22 @@ class AudioComponent(QGroupBox):
             axes.append(pane._ax)
         
         return axes
+    
+    def contextMenuEvent(self, event):
+        '''
+        Overwriting default context menu method
+        '''
+        context_menu = QMenu(self)
+
+        action1 = QAction("Delete File", self)
+        action1.triggered.connect(self.__delete_file)
+
+        context_menu.addAction(action1)
+
+        context_menu.exec_(event.globalPos())
+    
+    def __delete_file(self):
+        self.__delete_file_callback(self)
 
 class MainWindow(PPGLifeCycle,QMainWindow):
     def __init__(self, args):
@@ -459,6 +476,12 @@ class MainWindow(PPGLifeCycle,QMainWindow):
         for audio_component in audio_component_list:
             audio_component._delete_pane(pane_index)
 
+    @loading_decorator
+    def __delete_file(self, audio_component):
+        self.audio_layouts.removeWidget(audio_component)
+        self.audio_layouts.update()
+        audio_component.deleteLater()
+
     def createMoreMenu(self):
         file_menu = self.menuBar().addMenu('More')
 
@@ -497,23 +520,23 @@ class MainWindow(PPGLifeCycle,QMainWindow):
 
         first_data = process_audio(data)
         
-        new_audio_component = AudioComponent(file_base_name, self.__delete_pane)
+        new_audio_component = AudioComponent(file_base_name, self.__delete_pane, self.__delete_file)
         new_audio_component.set_data(first_data, samplerate)
         self.audio_layouts.addWidget(new_audio_component)
         
         for pane in initial_pane_list:
             new_audio_component._add_pane(pane)
 
-    def __load_wwc_file(self, file_name, initial_pane_list, *args, **kwargs):
+    def __load_wwc_file(self, file_name, initial_pane_list, is_first_file, *args, **kwargs):
         with open(file_name, 'rb') as file:
             config = pickle.load(file)
 
         for audio_component in config:
-            if initial_pane_list != [] and audio_component['other_plot_config']['panes'] != initial_pane_list:
+            if (not is_first_file) and (audio_component['other_plot_config']['panes'] != initial_pane_list):
                 show_message('Panes do not match', msg_type='error')
                 return
 
-            new_audio_component = AudioComponent(audio_component['file_name'], self.__delete_pane)
+            new_audio_component = AudioComponent(audio_component['file_name'], self.__delete_pane, self.__delete_file)
             new_audio_component.set_data(audio_component['data'], audio_component['fs'])
             new_audio_component.x_left = audio_component['plot_config']['x_start']
             new_audio_component.x_right = audio_component['plot_config']['x_end']
@@ -530,11 +553,13 @@ class MainWindow(PPGLifeCycle,QMainWindow):
             return
 
         initial_pane_list=self.__get_existing_pane_list()
+        no_of_files = len(self.__get_audio_components())
+        is_first_file = (no_of_files == 0)
 
         if(get_file_extension(file_name) in ['wav']):
             self.__load_audio_file(file_name, initial_pane_list)
         elif(get_file_extension(file_name) in ['wwc']):
-            self.__load_wwc_file(file_name, initial_pane_list)
+            self.__load_wwc_file(file_name, initial_pane_list, is_first_file)
 
     def __load_file_from_args(self, arg_1):
         cwd = os.getcwd()
