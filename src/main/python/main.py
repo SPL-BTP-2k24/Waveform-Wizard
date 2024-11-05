@@ -173,7 +173,7 @@ class AudioComponent(QGroupBox):
         self.zoom_out_action.triggered.connect(self.zoom_out)
         self.tool_button_zoom_out = QToolButton(self)
         self.tool_button_zoom_out.setDefaultAction(self.zoom_out_action)
-        self.play_action = QAction('Play/Pause')
+        self.play_action = QAction('Play')
         self.play_action.triggered.connect(self.__play_file)
         self.tool_button_play = QToolButton(self)
         self.tool_button_play.setDefaultAction(self.play_action)
