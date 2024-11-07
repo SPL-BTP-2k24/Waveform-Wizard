@@ -129,3 +129,69 @@ jobs:
     #   with:
     #     name: Windows Binary
     #     path: target\Waveform-Wizard\Waveform-Wizard.exe
+
+  build-mac:
+    
+    strategy:
+      matrix:
+        os: [macos-14, macos-15]
+        include:
+          - os: macos-14
+            dmg_file_name: Waveform-Wizard_macos-14.dmg
+          - os: macos-15
+            dmg_file_name: Waveform-Wizard_macos-15.dmg
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+      
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Save version info
+      run: |
+        echo "meta_info = { 'version': '${{ github.ref_name }}' }" > src/main/python/version.py
+
+    - name: Freeze Application
+      run: |
+        ppg freeze
+
+    - name: Updating create-dmg; downloading source-code
+      run: curl -L https://github.com/create-dmg/create-dmg/archive/refs/tags/v1.0.10.tar.gz -o /tmp/create-dmg-v1.0.10.tar.gz
+
+    - name: Updating create-dmg; extracting code
+      run: tar -xvzf /tmp/create-dmg-v1.0.10.tar.gz -C /tmp
+
+    - name: Updating create-dmg; deleting current create-dmg
+      run : rm -rf /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg
+
+    - name: Updating create-dmg; moving location
+      run: sudo mv /tmp/create-dmg-1.0.10 /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg
+
+    - name: Updating create-dmg; converting create-dmg file
+      run: sed -i '' 's/\r$//' /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg/create-dmg
+
+    - name: Updating create-dmg; grant execute permissions for create-dmg
+      run: chmod +x /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg/create-dmg
+
+    - name: Create Installer
+      run: |
+        ppg installer
+        mv target/Waveform-Wizard.dmg target/${{ matrix.dmg_file_name }}
+
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ github.ref_name }}
+        token: ${{ secrets.RELEASE_TOKEN }}
+        files: |
+          target/${{ matrix.dmg_file_name }}
