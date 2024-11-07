@@ -26,7 +26,8 @@ $ sudo apt install ./Waveform-Wizard_ubuntu-<version>.deb
 1. Download the latest installation file from [Releases](https://github.com/SPL-BTP-2k24/Waveform-Wizard/releases) Page.
 
    * For windows 10, 11 -> Waveform-Wizard-Setup_windows_10.exe
-2. Run the `.exe` file.3. Since we are not licensed developer with Microsoft, Windows doesn't detect the application as safe as shown below:
+2. Run the `.exe` file.
+3. Since we are not licensed developer with Microsoft, Windows doesn't detect the application as safe as shown below:
 
    <img src="./readme-assets/1.png" alt="Screenshot 1" width="300"/>
 
@@ -64,6 +65,33 @@ $ sudo apt install ./Waveform-Wizard_ubuntu-<version>.deb
 
    <img src="./readme-assets/13.png" alt="Screenshot 13" width="300"/>
 
+## Mac-OS
+
+1. Download the latest installation file from [Releases](https://github.com/SPL-BTP-2k24/Waveform-Wizard/releases) Page. Available for:
+
+   * For macos 14 -> Waveform-Wizard_macos-14.dmg
+   * For macos 15 -> Waveform-Wizard_macos-15.dmg
+
+2. Open the downloaded `.dmg` file. A window will open like this:
+
+   <img src="./readme-assets/mac-01.png" alt="Mac 01" width="300"/>
+
+3. Drag the `Waveform-Wizard` icon into applications folder to install the app.
+4. Since we are not licensed developer with Apple, mac shows the application as 'Damaged'. To solve this, remove the attribute from the app as follows: Open a terminal, run the following command:
+
+   ```sh
+   xattr -cr /Applications/Waveform-Wizard.app
+   ```
+
+   > Note that it is absolutely safe to run this command.
+
+   <img src="./readme-assets/mac-02.png" alt="Mac 02" width="300"/>
+
+5. You can safely remove the downloaded `.dmg` file from the system.
+6. Now, you should be able to see `Waveform-Wizard` in the application tray:
+
+   <img src="./readme-assets/mac-03.png" alt="Mac 03" width="300"/>
+
 # Usage
 
 ## Windows
@@ -79,6 +107,9 @@ $ sudo apt install ./Waveform-Wizard_ubuntu-<version>.deb
 
 ## Ubuntu
 1. You can find the application in app tray in ubuntu
+
+## Mac OS
+1. You can find the application in app tray in Macos
 
 # Help/Docs:
 
