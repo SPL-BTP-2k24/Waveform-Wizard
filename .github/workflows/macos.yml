@@ -50,6 +50,12 @@ jobs:
       run: |
         ppg freeze
 
+    - name: Installing dos2unix
+      run: port install dos2unix
+    
+    - name: converting create-dmg file
+      run: dos2unix /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg/create-dmg
+
     - name: temp-3
       run: ls -la /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg/create-dmg
 
