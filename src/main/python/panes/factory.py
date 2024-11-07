@@ -9,7 +9,6 @@ from panes.formant_peaks import Pane_FormantPeaks
 from panes.vad import Pane_Vad
 from panes.pitch_contour import Pane_Contour
 from panes.constantq import Pane_ConstantQ
-from panes.egg import Pane_Egg
 
 class Pane_Factory():
     name_to_pane_map = {
@@ -22,7 +21,6 @@ class Pane_Factory():
         'VAD': Pane_Vad,
         'Pitch Contour': Pane_Contour,
         'Constant-Q': Pane_ConstantQ,
-        'EGG': Pane_Egg,
     }
 
     def get_pane_class_by_name(name) -> Pane_Base:

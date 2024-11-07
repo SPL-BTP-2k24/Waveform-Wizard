@@ -11,3 +11,4 @@ class Pane_Waveform(Pane_Base):
         time = len(self._data)/self._fs
         x = np.linspace(0, time, len(self._data))
         self._ax.plot(x, self._data)
+        self._ax.set_ylim(-1, 1)
