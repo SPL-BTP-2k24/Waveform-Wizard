@@ -40,9 +40,6 @@ jobs:
     - name: temp
       run: ls -l /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg
 
-    - name: Grant execute permissions for create-dmg
-      run: chmod +x /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg/create-dmg
-
     - name: temp-2
       run: ls -l /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg
 
@@ -60,10 +57,13 @@ jobs:
       run : rm -rf /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg
 
     - name: Updating create-dmg; moving location
-      run: sudo mv /tmp/create-dmg-1.0.10 /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/
+      run: sudo mv /tmp/create-dmg-1.0.10 /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg
 
     - name: converting create-dmg file
       run: sed -i '' 's/\r$//' /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg/create-dmg
+
+    - name: Grant execute permissions for create-dmg
+      run: chmod +x /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg/create-dmg
 
     - name: temp-3
       run: ls -la /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg/create-dmg
