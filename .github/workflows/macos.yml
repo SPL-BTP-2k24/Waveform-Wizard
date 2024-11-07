@@ -15,7 +15,7 @@ jobs:
           - os: macos-14
             dmg_file_name: Waveform-Wizard_macos-14.dmg
           - os: macos-15
-            dmg_file_name: Waveform-Wizard_macos-15.deb
+            dmg_file_name: Waveform-Wizard_macos-15.dmg
 
     runs-on: ${{ matrix.os }}
 
@@ -63,7 +63,11 @@ jobs:
       run: |
         ppg installer
         mv target/Waveform-Wizard.dmg target/${{ matrix.dmg_file_name }}
-        
+    
+    - name: see properties
+      run: |
+        file target/${{ matrix.dmg_file_name }}
+
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
