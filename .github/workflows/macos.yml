@@ -10,12 +10,12 @@ jobs:
     
     strategy:
       matrix:
-        os: [macos-14]
+        os: [macos-14, macos-15]
         include:
           - os: macos-14
             dmg_file_name: Waveform-Wizard_macos-14.dmg
-          # - os: ubuntu-22.04
-          #   dmg_file_name: Waveform-Wizard_macos-13.deb
+          - os: macos-15
+            dmg_file_name: Waveform-Wizard_macos-15.deb
 
     runs-on: ${{ matrix.os }}
 
@@ -36,12 +36,6 @@ jobs:
     - name: Save version info
       run: |
         echo "meta_info = { 'version': '${{ github.ref_name }}' }" > src/main/python/version.py
-
-    - name: temp
-      run: ls -l /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg
-
-    - name: temp-2
-      run: ls -l /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg
 
     - name: Freeze Application
       run: |
@@ -64,12 +58,6 @@ jobs:
 
     - name: Grant execute permissions for create-dmg
       run: chmod +x /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg/create-dmg
-
-    - name: temp-3
-      run: ls -la /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg/create-dmg
-
-    - name: temp-4
-      run: file /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg/create-dmg
 
     - name: Create Installer
       run: |
