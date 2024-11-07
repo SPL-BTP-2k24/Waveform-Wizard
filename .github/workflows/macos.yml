@@ -50,6 +50,12 @@ jobs:
       run: |
         ppg freeze
 
+    - name: temp-3
+      run: ls -la /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg/create-dmg
+
+    - name: temp-4
+      run: file /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg/create-dmg
+
     - name: Create Installer
       run: |
         ppg installer
