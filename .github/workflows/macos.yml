@@ -10,10 +10,10 @@ jobs:
     
     strategy:
       matrix:
-        os: [macos-latest]
+        os: [macos-14]
         include:
-          - os: macos-latest
-            dmg_file_name: Waveform-Wizard_macos-latest.dmg
+          - os: macos-14
+            dmg_file_name: Waveform-Wizard_macos-14.dmg
           # - os: ubuntu-22.04
           #   dmg_file_name: Waveform-Wizard_macos-13.deb
 
