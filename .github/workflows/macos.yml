@@ -50,6 +50,18 @@ jobs:
       run: |
         ppg freeze
 
+    - name: Updating create-dmg; downloading source-code
+      run: curl -L https://github.com/create-dmg/create-dmg/archive/refs/tags/v1.0.10.tar.gz -o /tmp/create-dmg-v1.0.10.tar.gz
+
+    - name: Updating create-dmg; extracting code
+      run: tar -xvzf /tmp/create-dmg-v1.0.10.tar.gz -C /tmp
+
+    - name: Updating create-dmg; deleting current create-dmg
+      run : rm -rf /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg
+
+    - name: Updating create-dmg; moving location
+      run: sudo mv /tmp/create-dmg-1.0.10 /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/
+
     - name: converting create-dmg file
       run: sed -i '' 's/\r$//' /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg/create-dmg
 
