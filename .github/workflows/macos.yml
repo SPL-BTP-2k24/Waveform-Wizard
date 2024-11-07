@@ -64,9 +64,13 @@ jobs:
         ppg installer
         mv target/Waveform-Wizard.dmg target/${{ matrix.dmg_file_name }}
     
-    - name: see properties
+    - name: see properties of dmg
       run: |
         file target/${{ matrix.dmg_file_name }}
+
+    - name: see properties of 
+      run: |
+        file target/Waveform-Wizard.app/Contents/MacOS/Waveform-Wizard
 
     - name: Release
       uses: softprops/action-gh-release@v2
