@@ -47,6 +47,9 @@ jobs:
       run: |
         echo "meta_info = { 'version': '${{ github.ref_name }}' }" > src/main/python/version.py
 
+    - name: temp
+      run: tree /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg
+
     - name: Grant execute permissions for create-dmg
       run: chmod +x /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg/create-dmg
 
