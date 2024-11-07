@@ -28,15 +28,15 @@ jobs:
       with:
         python-version: '3.12'
         
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: '3.3' # Not needed with a `.ruby-version` or `.tool-versions`
-        bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+    # - name: Set up Ruby
+    #   uses: ruby/setup-ruby@v1
+    #   with:
+    #     ruby-version: '3.3' # Not needed with a `.ruby-version` or `.tool-versions`
+    #     bundler-cache: true # runs 'bundle install' and caches installed gems automatically
       
-    - name: Install FPM (for installer)
-      run: |
-        gem install fpm
+    # - name: Install FPM (for installer)
+    #   run: |
+    #     gem install fpm
       
     - name: Install dependencies
       run: |
@@ -46,6 +46,9 @@ jobs:
     - name: Save version info
       run: |
         echo "meta_info = { 'version': '${{ github.ref_name }}' }" > src/main/python/version.py
+
+    - name: Grant execute permissions for create-dmg
+      run: chmod +x /Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/ppg/installer/mac/create-dmg/create-dmg
 
     - name: Freeze Application
       run: |
