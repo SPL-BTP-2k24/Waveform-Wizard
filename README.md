@@ -6,7 +6,7 @@ Waveform-Wizard is a simple, fast and easy to use application to analyse sound s
 
 ## Ubuntu
 
-Download the latest installation files from [Releases](https://github.com/SPL-BTP-2k24/Waveform-Wizard-Public/releases) Page.
+Download the latest installation files from [Releases](https://github.com/SPL-BTP-2k24/Waveform-Wizard/releases) Page.
 
 * For ubuntu 20.04 -> Waveform-Wizard_ubuntu-20_04.deb
 * For ubuntu 22.04 -> Waveform-Wizard_ubuntu-22_04.deb
@@ -23,7 +23,7 @@ $ sudo apt install ./Waveform-Wizard_ubuntu-<version>.deb
 
 ## Windows
 
-1. Download the latest installation file from [Releases](https://github.com/SPL-BTP-2k24/Waveform-Wizard-Public/releases) Page.
+1. Download the latest installation file from [Releases](https://github.com/SPL-BTP-2k24/Waveform-Wizard/releases) Page.
 
    * For windows 10, 11 -> Waveform-Wizard-Setup_windows_10.exe
 2. Run the `.exe` file.
@@ -67,7 +67,7 @@ $ sudo apt install ./Waveform-Wizard_ubuntu-<version>.deb
 
 ## Mac-OS
 
-1. Download the latest installation file from [Releases](https://github.com/SPL-BTP-2k24/Waveform-Wizard-Public/releases) Page. Available for:
+1. Download the latest installation file from [Releases](https://github.com/SPL-BTP-2k24/Waveform-Wizard/releases) Page. Available for:
 
    * For macos 14 -> Waveform-Wizard_macos-14.dmg
    * For macos 15 -> Waveform-Wizard_macos-15.dmg
@@ -113,7 +113,7 @@ $ sudo apt install ./Waveform-Wizard_ubuntu-<version>.deb
 
 # Help/Docs:
 
-Visit [Report](https://github.com/SPL-BTP-2k24/Waveform-Wizard-Public/blob/master/Report.pdf) for step by step help in using the application.
+Visit [Report](https://github.com/SPL-BTP-2k24/Waveform-Wizard/blob/master/Report.pdf) for step by step help in using the application.
 
 # Supported Formats
 
