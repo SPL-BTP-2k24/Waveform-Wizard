@@ -1,3 +1,5 @@
+# [Website](https://spl-btp-2k24.github.io/Waveform-Wizard/)
+
 # Waveform-Wizard
 
 Waveform-Wizard is a simple, fast and easy to use application to analyse sound signals
